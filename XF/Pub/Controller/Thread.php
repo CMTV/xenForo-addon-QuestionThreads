@@ -14,11 +14,29 @@ class Thread extends XFCP_Thread
 {
     public function actionMarkSolved(ParameterBag $params)
     {
+        $thread = $this->assertViewableThread($params->thread_id);
+
+        $options = \XF::options();
+
+        if ($options->CMTV_QT_closeThread) {
+          $editor = $this->getEditorService($thread);
+          $editor->setDiscussionOpen(false);
+          $editor->save();
+        }
         return $this->markGeneric($params->thread_id, true);
     }
 
     public function actionMarkUnsolved(ParameterBag $params)
     {
+        $thread = $this->assertViewableThread($params->thread_id);
+
+        $options = \XF::options();
+
+        if ($options->CMTV_QT_closeThread) {
+          $editor = $this->getEditorService($thread);
+          $editor->setDiscussionOpen(true);
+          $editor->save();
+        }
         return $this->markGeneric($params->thread_id, false);
     }
 
